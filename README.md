@@ -1,2 +1,3 @@
-# rag-app-simple
-Simple RAG application based on OpenAI services. 
+# Retrieval Augmented Generation (RAG) Examples
+
+RAG application examples. 
