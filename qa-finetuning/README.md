@@ -6,6 +6,26 @@ All the implementation is in the notebook [`qa_finetuning.ipynb`](./qa_finetunin
 
 The example was taken from one of the lectures of the [Udacity Generative AI Nanodegree](), and it uses several snippets from the repository of the [HuggingFace Examples](https://github.com/huggingface/transformers/blob/main/examples/pytorch/question-answering/trainer_qa.py).
 
+## Setup
+
+Create a python environment and install the dependencies:
+
+```bash
+# Create the necessary Python environment
+conda env create -f conda.yaml
+conda activate gennai
+
+# Compile and install all dependencies
+pip-compile requirements.in
+pip-sync requirements.txt
+
+# If we need a new dependency,
+# add it to requirements.in 
+# And then:
+pip-compile requirements.in
+pip-sync requirements.txt
+```
+
 ## Dataset
 
 The example uses the [SQuAD 2.0](https://arxiv.org/abs/1806.03822) format, in which each QA pair is formatted as follows
