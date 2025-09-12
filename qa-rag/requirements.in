@@ -53,6 +53,7 @@ transformers
 transformers[torch]
 wheel
 wikipedia
+wikipedia-api
 wordcloud
 tiktoken
 youtube-transcript-api
