@@ -51,7 +51,7 @@ pip-sync requirements.txt
 
 Finally, open the notebook where everything is implemented: [`qa_rag.ipynb`](./qa_rag.ipynb).
 
-## Dataset
+## Dataset Indexing
 
 The dataset or queried documents are scrapped from the Wikipedia article [2024 Events in Spain](https://en.wikipedia.org/wiki/2024_in_Spain) using `BeautifulSoup`.
 
@@ -78,6 +78,8 @@ The `embedding` column contains the semantic embedding the the `text` column, wh
 - or OpenAI (model: `text-embedding-ada-002`): `compute_embeddings_openai()`
 
 The resulting dataframe is the *knowledge base* used for the RAG pipeline.
+
+## Query Pipeline
 
 
 
