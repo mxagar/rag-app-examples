@@ -5,8 +5,7 @@ This small project shows how to build a basic Question-Answering chatbot based o
 RAG consists in 
 
 - retrieving relevant documents related to the user **query** 
-- and feeding them to a generative model in the context along with the query; 
-- finally, we instruct the model to provide the answer using the provided documents/context.
+- and feeding them to a generative model in the context along with the query, while we instruct it to provide the answer using the provided documents/context.
 
 Therefore, we avoid needing to fine-tune the generative model with our documents.
 This is specially well suited when we want to extend the model's *memory* with recent and continuously changing documents.
@@ -14,7 +13,7 @@ This is specially well suited when we want to extend the model's *memory* with r
 In order to show how the approach works,
 
 - I use the **model** [`gpt-3.5-turbo-instruct`](https://platform.openai.com/docs/models/gpt-3.5-turbo?snapshot=gpt-3.5-turbo-instruct) from OpenAI
-- and a **dataset** or set **queried documents** built from the Wikipedia article [2024 Events in Spain](https://en.wikipedia.org/wiki/2024_in_Spain) (54 events in total).
+- and a **dataset** or set of **queried documents** built from the Wikipedia article [2024 Events in Spain](https://en.wikipedia.org/wiki/2024_in_Spain) (54 events in total).
 
 The [`gpt-3.5-turbo-instruct`](https://platform.openai.com/docs/models/gpt-3.5-turbo?snapshot=gpt-3.5-turbo-instruct) model
 
@@ -26,6 +25,22 @@ Therefore, we can be sure that none of the 2024 events in Spain were used for du
 
 - if we ask the model a question about the dataset, it should hallucinate and/or fail to answer properly;
 - but if we use the RAG pattern, it should be able to build and use a relevant context that facilitates a correct answer.
+
+In order to be able to retrieve relevant documents relative to our question/query, we need to 
+
+- preprocess and split our documents properly
+- and represent and index our data efficiently.
+
+In our example, preprocessing and splitting is done at event level: the article is parsed and each event text and metadata (e.g., date, references) are stored in separate documents.
+
+Document representation for fast relevant retrieval is approached in two ways:
+
+- Semantic embeddings: document texts are converted into semantic embeddings, i.e., multi-dimensional dense vectors which point in similar directions if the text have a similar meaning. Embeddings have a fixed dimensionality, defined by the model which generated them. Two embedding models are used:
+  - [`intfloat/e5-large-v2`](https://huggingface.co/intfloat/e5-large-v2), from HuggingFace, downloaded and used locally.
+  - [`text-embedding-ada-002`](https://platform.openai.com/docs/models/text-embedding-ada-002), from OpenAI, accessed by the API.
+- TFIDF indices: *term frequency and inverse document frequency* is technique which sparsely represents the documents by assigning frequency weights to their tokens/terms in relation to their occurrences in the document and in the complete document set. Each token/term in the complete set represents a dimension in the TFIDF vectors.
+
+The combination of several retrieved document sets is also exemplarily shown by implementing *reciprocal rank fusion*.
 
 ## Setup
 
@@ -74,8 +89,8 @@ Finally, `docs_to_embeddings_df()` converts the event dictionaries into a datafr
 
 The `embedding` column contains the semantic embedding the the `text` column, which can be generated using:
 
-- HuggingFace (model `intfloat/e5-large-v2`): `compute_embeddings_hf()`
-- or OpenAI (model: `text-embedding-ada-002`): `compute_embeddings_openai()`
+- HuggingFace (model [`intfloat/e5-large-v2`](https://huggingface.co/intfloat/e5-large-v2)): `compute_embeddings_hf()`
+- or OpenAI (model: [`text-embedding-ada-002`](https://platform.openai.com/docs/models/text-embedding-ada-002)): `compute_embeddings_openai()`
 
 The resulting dataframe is the *knowledge base* used for the RAG pipeline.
 
@@ -83,5 +98,7 @@ The resulting dataframe is the *knowledge base* used for the RAG pipeline.
 
 
 
-## Examples
+## Examples and Comparisons
+
+
 
