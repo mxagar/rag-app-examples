@@ -115,5 +115,4 @@ Finally, different aspects of the implemented system are briefly benchmarked:
 
 1. Which is the difference between using the base model [`gpt-3.5-turbo-instruct`](https://platform.openai.com/docs/models/gpt-3.5-turbo?snapshot=gpt-3.5-turbo-instruct) and the same base model with a context containing query-relevant documents?
 2. Which is the difference between the two embedding models used?
-3. Are embeddings better than TFIDF vectors? How can we select the best indexing approach?
-
+3. Which are the differences between the implemented retrievers?
