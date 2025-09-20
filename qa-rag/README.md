@@ -116,3 +116,86 @@ Finally, different aspects of the implemented system are briefly benchmarked:
 1. Which is the difference between using the base model [`gpt-3.5-turbo-instruct`](https://platform.openai.com/docs/models/gpt-3.5-turbo?snapshot=gpt-3.5-turbo-instruct) and the same base model with a context containing query-relevant documents?
 2. Which is the difference between the two embedding models used?
 3. Which are the differences between the implemented retrievers?
+
+### Plain Model vs. RAG-Based Model
+
+The RAG pipeline seems to find the correct answer when the *knowledge base* is used to enrich the context:
+
+```python
+q1 = "When was the first election in Spain in the year 2024 and where was it?"
+q2 = "How much money did Spain promise to provide to the Ukraine in 2024?"
+for q in [q1, q2]:
+    print(ask_question(q1, docs, retrievers, use_knowledge_base=True))
+```
+
+Response to `q1`:
+
+> The first election in Spain in the year 2024 was on Sunday, 18 February in Galicia.
+>
+> Reference(s):
+> https://en.wikipedia.org/wiki/2024_Galician_regional_election
+> https://en.wikipedia.org/wiki/2024_European_Parliament_election
+
+Response to `q2`:
+
+> 1 billion euros ($1.1 billion)
+> 
+> Reference(s):
+> https://www.aljazeera.com/news/2024/5/27/spain-pledges-1-billion-euros-of-military-aid-to-ukraine-in-2024
+> https://www.telegraph.co.uk/world-news/2024/06/11/torrential-rain-floods-majorca-airport-spain/
+
+And, as expected, if no knowledge base is allowed, the model has not enough information to answer without hallucinating:
+
+Response to `q1`:
+
+> There is no way to accurately answer this question as it is impossible to predict the future and the date and location of the first election in Spain in 2024. Elections in Spain typically occur every four years, so the next election in 2024 would likely take place in late spring or early summer. The location of the election would depend on the specific election and the political climate at the time.
+
+
+Response to `q2`:
+
+> There is no information available about Spain promising to provide money to Ukraine in 2024.
+
+### Differences between Embeddings
+
+Selecting the embeddings we want to use depends on several questions:
+
+- Are we going to compute them locally or via an API?
+- How much does it cost to compute them (per 1,000 tokens)?
+- How well do they represent the underlying texts?
+- Which is the maximum text length per embedding?
+- ...
+
+In any case, the first step for the selection consists comparing in them it terms of similarity; to that end, cosine similarities between the 54 document embeddings are computed for each embedding model. Then, the correlation between those model similarities are computed.
+
+Two correlations are considered:
+
+- Pearson: Measures linear correlation between two variables. *"Do the values lie on a straight line?"*
+- Spearman: Measures rank correlation (monotonic relationships). *"Do the values move in the same order (up or down)?"*
+
+All in all, we can see a correlation above 70%: `Pearson 0.765, Spearman 0.714`.
+
+![Embedding Similarities Scatterplot](./assets/embedding_similarity_scatterplot.png)
+
+### Differences in Retrieval
+
+We should also consider how good our retrieval works. Among other metrics, **recall** is often used to evaluate retrievers, which measures the question *is the answer in the returned top-k documents?*.
+
+However, we need an annotated dataset to measure recall. Instead, I will compute the **Jaccard** similarity between the top-k documents retrieved sets.
+The Jaccard similarity between sets is defined as
+
+$$
+J(docs_1, docs_2) = \frac{|docs_1 \cap docs_2|}{|docs_1 \cup docs_2|}
+$$
+
+It ranges in `[0,1]`, where:
+
+- `J = 1.0` similarity (0 distance): the sets are identical
+- `J = 0.0` similarity (1 distance): no overlap
+
+Jaccard is an inexpensive alternative to measure the differences between retrievers, specially if we have a reference retriever we know is good enough.
+
+After a brief explorative inspection, the OpenAI embeddings seem to lead to good set of retrieved documents.
+Using the OpenAI embeddings as reference method, the Jaccard similarity of the HF and TFIDF retrievers for the top 5 documents is:
+
+- OpenAI vs TFIDF: 0.279
+- OpenAI vs HF: 0.499
