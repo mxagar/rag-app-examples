@@ -132,7 +132,7 @@ Response to `q1`:
 
 > The first election in Spain in the year 2024 was on Sunday, 18 February in Galicia.
 >
-> Reference(s):
+> Reference(s):  
 > https://en.wikipedia.org/wiki/2024_Galician_regional_election
 > https://en.wikipedia.org/wiki/2024_European_Parliament_election
 
@@ -140,7 +140,7 @@ Response to `q2`:
 
 > 1 billion euros ($1.1 billion)
 > 
-> Reference(s):
+> Reference(s):  
 > https://www.aljazeera.com/news/2024/5/27/spain-pledges-1-billion-euros-of-military-aid-to-ukraine-in-2024
 > https://www.telegraph.co.uk/world-news/2024/06/11/torrential-rain-floods-majorca-airport-spain/
 
