@@ -4,7 +4,7 @@ This examples shows how to train a Question-Answering Model using HuggingFace.
 
 All the implementation is in the notebook [`qa_finetuning.ipynb`](./qa_finetuning.ipynb).
 
-The example was taken from one of the lectures of the [Udacity Generative AI Nanodegree](), and it uses several snippets from the repository of the [HuggingFace Examples](https://github.com/huggingface/transformers/blob/main/examples/pytorch/question-answering/trainer_qa.py).
+The example was taken from one of the lectures of the [Udacity Generative AI Nanodegree](https://www.udacity.com/course/generative-ai--nd608), and it uses several snippets from the repository of the [HuggingFace Examples](https://github.com/huggingface/transformers/blob/main/examples/pytorch/question-answering/trainer_qa.py).
 
 ## Setup
 
